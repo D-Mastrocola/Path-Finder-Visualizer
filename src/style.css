@@ -1,0 +1,41 @@
+html, body {
+    margin: 0;
+}
+#selection-header {
+    height: 80px;
+}
+ul {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+li {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#start-select-block {
+    width: 30px;
+    height: 30px;
+    background-color: rgb(100, 100, 255);
+}
+#end-select-block {
+    width: 30px;
+    height: 30px;
+    background-color: rgb(255, 20, 20);
+}
+#wall-select-block {
+    width: 30px;
+    height: 30px;
+    background-color: rgb(0, 0,0);
+}
+#eraser-select-block {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #000;
+    background-color: rgb(255, 255, 255);
+    box-sizing: border-box;
+}
