@@ -74,7 +74,7 @@ class World {
   }
   show() {
     stroke(0);
-    strokeWeight(2);
+    strokeWeight(1);
     for (let x = 0; x < this.worldArray.length; x++) {
       for (let y = 0; y < this.worldArray[x].length; y++) {
         if (this.worldArray[x][y] === "0") {
