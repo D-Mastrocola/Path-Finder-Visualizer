@@ -1,40 +1,31 @@
-
+let startNode;
+let endNode;
 let gridSize = 30;
-let block = '+';
-let gridWidth = Math.floor(window.innerWidth/gridSize) * gridSize;
-let gridHeight = Math.floor((window.innerHeight - document.getElementById('selection-header').offsetHeight)/gridSize) * gridSize;
+let gridWidth = Math.floor(window.innerWidth / gridSize) * gridSize;
+let gridHeight = Math.floor(window.innerHeight / gridSize) * gridSize;
 
 let world = new World(gridWidth, gridHeight, gridSize);
 
 function setup() {
+  startNode = new Start(10, 13, gridSize);
+  endNode = new End(40, 13, gridSize);
   createCanvas(gridWidth, gridHeight);
 }
 function mousePressed() {
-  if(mouseY > 0) {
-    world.addBlock(mouseX, mouseY, block)
+  if (mouseY > 0) {
+    world.addBlock(mouseX, mouseY,startNode, endNode);
   }
 }
 function mouseDragged() {
-  if(mouseY > 0) {
-    world.addBlock(mouseX, mouseY, block)
+  if (mouseY > 0) {
+    world.addBlock(mouseX, mouseY, startNode, endNode);
   }
 }
-
-document.getElementById("start-select").addEventListener("click", () => {
-  block = '+'
-});
-document.getElementById("end-select").addEventListener("click", () => {
-  block = '='
-});
-document.getElementById("wall-select").addEventListener("click", () => {
-  block = 'W'
-});
-document.getElementById("eraser-select").addEventListener("click", () => {
-  block = '0'
-});
-
 function draw() {
-  strokeWeight(2)
   background(255);
+  strokeWeight(2);
+
   world.show();
+  startNode.show();
+  endNode.show();
 }

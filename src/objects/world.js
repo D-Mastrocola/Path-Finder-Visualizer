@@ -4,10 +4,7 @@ class World {
     this.height = height / gridSize;
     this.gridSize = gridSize;
     this.worldArray = [];
-    this.startPos = {
-      x: 10,
-      y: 13,
-    };
+
     this.endPos = {
       x: 30,
       y: 13,
@@ -18,62 +15,47 @@ class World {
     for (let i = 0; i < this.width; i++) {
       this.worldArray.push([]);
       for (let j = 0; j < this.height; j++) {
-        if (i === this.startPos.x && j === this.startPos.y) {
-          this.worldArray[i].push("+");
-        } else if (i === this.endPos.x && j === this.endPos.y) {
-          this.worldArray[i].push("=");
-        } else {
-          this.worldArray[i].push("0");
-        }
+        this.worldArray[i].push("0");
       }
     }
 
     console.log(this.worldArray);
   }
-  addBlock(x, y, block) {
-    if (block === "0") {
-        let pos = {
-          x: Math.floor(x / this.gridSize),
-          y: Math.floor(y / this.gridSize),
-        };
-        this.worldArray[pos.x][pos.y] = "0";
-      }
-    if (block === "+") this.setStart(x, y);
-    if (block === "=") this.setEnd(x, y);
-    if (block === "W") {
-      let pos = {
-        x: Math.floor(x / this.gridSize),
-        y: Math.floor(y / this.gridSize),
-      };
+  addBlock(x, y, startNode, endNode) {
+    let pos = {
+      x: Math.floor(x / this.gridSize),
+      y: Math.floor(y / this.gridSize),
+    };
+    if(pos.x === startNode.pos.x && pos.y === startNode.pos.y) {
+      this.worldArray[startNode.pos.x][startNode.pos.y] = "0";
+      this.worldArray[pos.x][pos.y] = "+";
+      startNode.setPos(pos.x, pos.y)
+    } else if(pos.x === endNode.pos.x && pos.y === endNode.pos.y) {
+      this.worldArray[endNode.pos.x][endNode.pos.y] = "0";
+      this.worldArray[pos.x][pos.y] = "+";
+      endNode.setPos(pos.x, pos.y)
+    }else {
       this.worldArray[pos.x][pos.y] = "W";
     }
   }
-  setEnd(x, y) {
+  setEnd(x, y, endNode) {
     let pos = {
       x: Math.floor(x / this.gridSize),
       y: Math.floor(y / this.gridSize),
-    };
-    this.worldArray[this.endPos.x][this.endPos.y] = "0";
-    this.endPos = {
-      x: pos.x,
-      y: pos.y,
     };
     this.worldArray[pos.x][pos.y] = "=";
+    this.worldArray[endNode.x][endNode.y] = "0";
   }
-  setStart(x, y) {
+  setStart(x, y, startNode) {
     let pos = {
       x: Math.floor(x / this.gridSize),
       y: Math.floor(y / this.gridSize),
     };
-    this.worldArray[this.startPos.x][this.startPos.y] = "0";
-    this.startPos = {
-      x: pos.x,
-      y: pos.y,
-    };
     this.worldArray[pos.x][pos.y] = "+";
+    this.worldArray[startNode.x][startNode.y] = "0";
   }
   show() {
-    stroke(0);
+    stroke(200);
     strokeWeight(1);
     for (let x = 0; x < this.worldArray.length; x++) {
       for (let y = 0; y < this.worldArray[x].length; y++) {
@@ -86,23 +68,7 @@ class World {
             this.gridSize
           );
         } else if (this.worldArray[x][y] === "W") {
-          fill(0);
-          rect(
-            x * this.gridSize,
-            y * this.gridSize,
-            this.gridSize,
-            this.gridSize
-          );
-        } else if (this.worldArray[x][y] === "+") {
-          fill(100, 100, 255);
-          rect(
-            x * this.gridSize,
-            y * this.gridSize,
-            this.gridSize,
-            this.gridSize
-          );
-        } else if (this.worldArray[x][y] === "=") {
-          fill(255, 20, 20);
+          fill(0, 130);
           rect(
             x * this.gridSize,
             y * this.gridSize,
