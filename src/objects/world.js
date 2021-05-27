@@ -27,13 +27,9 @@ class World {
       y: Math.floor(y / this.gridSize),
     };
     if(pos.x === startNode.pos.x && pos.y === startNode.pos.y) {
-      this.worldArray[startNode.pos.x][startNode.pos.y] = "0";
-      this.worldArray[pos.x][pos.y] = "+";
-      startNode.setPos(pos.x, pos.y)
+      startNode.selected = true;
     } else if(pos.x === endNode.pos.x && pos.y === endNode.pos.y) {
-      this.worldArray[endNode.pos.x][endNode.pos.y] = "0";
-      this.worldArray[pos.x][pos.y] = "+";
-      endNode.setPos(pos.x, pos.y)
+      endNode.selected = true;
     }else {
       this.worldArray[pos.x][pos.y] = "W";
     }

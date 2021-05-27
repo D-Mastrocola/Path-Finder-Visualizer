@@ -13,7 +13,9 @@ class End {
       this.gridSize
     );
   }
-  setPos(x, y) {
+  setPos(x, y, array) {
+    array[this.pos.x][this.pos.y] = '0';
     this.pos.set(x, y);
+    array[this.pos.x][this.pos.y] = '+';
   }
 }

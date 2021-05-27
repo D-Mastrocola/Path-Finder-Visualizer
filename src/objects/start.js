@@ -3,6 +3,8 @@ class Start {
     this.pos = createVector(x, y);
     this.gridSize = gridSize;
     this.selected = false;
+    this.unvisitedNodes = [];
+    this.vistedNodes = [];
   }
   show() {
     fill(100, 100, 255);
@@ -13,7 +15,9 @@ class Start {
       this.gridSize
     );
   }
-  setPos(x, y) {
+  setPos(x, y, array) {
+    array[this.pos.x][this.pos.y] = '0';
     this.pos.set(x, y);
+    array[this.pos.x][this.pos.y] = '+';
   }
 }

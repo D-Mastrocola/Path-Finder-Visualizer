@@ -18,8 +18,15 @@ function mousePressed() {
 }
 function mouseDragged() {
   if (mouseY > 0) {
+    if(startNode.selected) startNode.setPos(Math.floor(mouseX/gridSize), Math.floor(mouseY/gridSize), world.worldArray);
+
+    if(endNode.selected) endNode.setPos(Math.floor(mouseX/gridSize), Math.floor(mouseY/gridSize), world.worldArray);
     world.addBlock(mouseX, mouseY, startNode, endNode);
   }
+}
+function mouseReleased() {
+  startNode.selected = false;
+  endNode.selected = false;
 }
 function draw() {
   background(255);
