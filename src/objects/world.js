@@ -18,17 +18,15 @@ class World {
         this.worldArray[i].push("0");
       }
     }
-
-    console.log(this.worldArray);
   }
   addBlock(x, y, startNode, endNode) {
     let pos = {
       x: Math.floor(x / this.gridSize),
       y: Math.floor(y / this.gridSize),
     };
-    if(pos.x === startNode.pos.x && pos.y === startNode.pos.y) {
+    if(pos.x === startNode.pos.x && pos.y === startNode.pos.y && endNode.selected !== true) {
       startNode.selected = true;
-    } else if(pos.x === endNode.pos.x && pos.y === endNode.pos.y) {
+    } else if(pos.x === endNode.pos.x && pos.y === endNode.pos.y && startNode.selected !== true) {
       endNode.selected = true;
     }else {
       this.worldArray[pos.x][pos.y] = "W";

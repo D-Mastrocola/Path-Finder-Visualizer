@@ -7,21 +7,47 @@ let gridHeight = Math.floor(window.innerHeight / gridSize) * gridSize;
 let world = new World(gridWidth, gridHeight, gridSize);
 
 function setup() {
-  startNode = new Start(10, 13, gridSize);
+  startNode = new Start(10, 13, gridSize, world.worldArray);
   endNode = new End(40, 13, gridSize);
   createCanvas(gridWidth, gridHeight);
+  startNode.aStarSolve(world.worldArray);
 }
 function mousePressed() {
-  if (mouseY > 0) {
-    world.addBlock(mouseX, mouseY,startNode, endNode);
+  if (mouseY > 0 && mouseY < gridHeight && mouseX > 0 && mouseX < gridWidth) {
+    if (startNode.selected) {
+      startNode.setPos(
+        Math.floor(mouseX / gridSize),
+        Math.floor(mouseY / gridSize),
+        world.worldArray
+      );
+    } else if (endNode.selected) {
+      endNode.setPos(
+        Math.floor(mouseX / gridSize),
+        Math.floor(mouseY / gridSize),
+        world.worldArray
+      );
+    } else {
+      world.addBlock(mouseX, mouseY, startNode, endNode);
+    }
   }
 }
 function mouseDragged() {
-  if (mouseY > 0) {
-    if(startNode.selected) startNode.setPos(Math.floor(mouseX/gridSize), Math.floor(mouseY/gridSize), world.worldArray);
-
-    if(endNode.selected) endNode.setPos(Math.floor(mouseX/gridSize), Math.floor(mouseY/gridSize), world.worldArray);
-    world.addBlock(mouseX, mouseY, startNode, endNode);
+  if (mouseY > 0 && mouseY < gridHeight && mouseX > 0 && mouseX < gridWidth) {
+    if (startNode.selected) {
+      startNode.setPos(
+        Math.floor(mouseX / gridSize),
+        Math.floor(mouseY / gridSize),
+        world.worldArray
+      );
+    } else if (endNode.selected) {
+      endNode.setPos(
+        Math.floor(mouseX / gridSize),
+        Math.floor(mouseY / gridSize),
+        world.worldArray
+      );
+    } else {
+      world.addBlock(mouseX, mouseY, startNode, endNode);
+    }
   }
 }
 function mouseReleased() {
