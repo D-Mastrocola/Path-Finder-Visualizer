@@ -1,64 +1,117 @@
-let startNode;
-let endNode;
-let gridSize = 30;
-let gridWidth = Math.floor(window.innerWidth / gridSize) * gridSize;
-let gridHeight = Math.floor(window.innerHeight / gridSize) * gridSize;
+//Cost function
+//f(n) = g(n) + h(n)
+//g is the know cost
+//h is the estimated cost
+let cols = 25;
+let rows = 25;
+var grid = new Array(cols);
 
-let world = new World(gridWidth, gridHeight, gridSize);
+var nodeSize;
+
+var openSet = [];
+var closedSet = [];
+var start;
+var end;
+var path = [];
 
 function setup() {
-  startNode = new Start(10, 13, gridSize, world.worldArray);
-  endNode = new End(40, 13, gridSize);
-  createCanvas(gridWidth, gridHeight);
-  startNode.aStarSolve(world.worldArray);
-}
-function mousePressed() {
-  if (mouseY > 0 && mouseY < gridHeight && mouseX > 0 && mouseX < gridWidth) {
-    if (startNode.selected) {
-      startNode.setPos(
-        Math.floor(mouseX / gridSize),
-        Math.floor(mouseY / gridSize),
-        world.worldArray
-      );
-    } else if (endNode.selected) {
-      endNode.setPos(
-        Math.floor(mouseX / gridSize),
-        Math.floor(mouseY / gridSize),
-        world.worldArray
-      );
-    } else {
-      world.addBlock(mouseX, mouseY, startNode, endNode);
+  createCanvas(500, 500);
+
+  nodeSize = width / cols;
+  //Creating a 2D array for the nodes
+  for (let i = 0; i < cols; i++) {
+    grid[i] = new Array(rows);
+  }
+  console.log(grid);
+
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      grid[i][j] = new Node(i, j);
     }
   }
-}
-function mouseDragged() {
-  if (mouseY > 0 && mouseY < gridHeight && mouseX > 0 && mouseX < gridWidth) {
-    if (startNode.selected) {
-      startNode.setPos(
-        Math.floor(mouseX / gridSize),
-        Math.floor(mouseY / gridSize),
-        world.worldArray
-      );
-    } else if (endNode.selected) {
-      endNode.setPos(
-        Math.floor(mouseX / gridSize),
-        Math.floor(mouseY / gridSize),
-        world.worldArray
-      );
-    } else {
-      world.addBlock(mouseX, mouseY, startNode, endNode);
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      grid[i][j].addNeighbors(grid);
     }
   }
+  start = grid[0][0];
+  end = grid[cols - 1][5];
+
+  openSet.push(start);
 }
-function mouseReleased() {
-  startNode.selected = false;
-  endNode.selected = false;
+function heuristic(a, b) {
+  //var d = dist(a.x, a.y, b.x, b.y);
+  var d  = abs(a.x-b.x) + abs(a.y - b.y);
+  return d;
 }
 function draw() {
-  background(255);
-  strokeWeight(2);
 
-  world.show();
-  startNode.show();
-  endNode.show();
+  if (openSet.length > 0) {
+    //Open set is not empty so continue to search
+
+    let lowestIndex = 0;
+    for (let i = 0; i < openSet.length; i++) {
+      if (openSet[i].f < openSet[lowestIndex].f) {
+        lowestIndex = i;
+      }
+    }
+    var current = openSet[lowestIndex];
+    if (current == end) {
+      noLoop();
+      console.log('done');
+    }
+
+    closedSet.push(current);
+    openSet.splice(lowestIndex, 1);
+
+    let neighbors = current.neighbors;
+    for (let i = 0; i < neighbors.length; i++) {
+      let n = neighbors[i];
+      if (!closedSet.includes(n)) {
+        var tempG = current.g + 1;
+
+        if (openSet.includes(n)) {
+          if (tempG < n.g) {
+            n.g = tempG;
+          }
+        } else {
+          n.g = tempG;
+          openSet.push(n);
+        }
+
+        n.h = heuristic(n, end);
+        n.f = n.g + n.h;
+        n.previous = current;
+      }
+
+    }
+
+  } else {
+    //No possible route found
+    console.log('no route')
+  }
+  background(0);
+
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      grid[i][j].show(color(255));
+    }
+  }
+  for (let i = 0; i < openSet.length; i++) {
+    openSet[i].show(color(0, 255, 0));
+  }
+  for (let i = 0; i < closedSet.length; i++) {
+    closedSet[i].show(color(255, 0, 0));
+  }
+  path = [];
+  let temp = current;
+  path.push(temp)
+  while (temp.previous) {
+    path.push(temp.previous);
+    temp = temp.previous;
+  }
+  for (let i = 0; i < path.length; i++) {
+    path[i].show(color(0, 0, 255));
+  }
+
 }
