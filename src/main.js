@@ -2,8 +2,8 @@
 //f(n) = g(n) + h(n)
 //g is the know cost
 //h is the estimated cost
-let cols = 25;
-let rows = 25;
+let cols = 50;
+let rows = 50;
 var grid = new Array(cols);
 
 var nodeSize;
@@ -35,13 +35,14 @@ function setup() {
     }
   }
   start = grid[0][0];
-  end = grid[cols - 1][5];
+  end = grid[cols - 1][rows - 1];
+  start.wall = false;
+  end.wall = false;
 
   openSet.push(start);
 }
 function heuristic(a, b) {
-  //var d = dist(a.x, a.y, b.x, b.y);
-  var d  = abs(a.x-b.x) + abs(a.y - b.y);
+  var d = dist(a.x, a.y, b.x, b.y);
   return d;
 }
 function draw() {
@@ -59,6 +60,7 @@ function draw() {
     if (current == end) {
       noLoop();
       console.log('done');
+      return;
     }
 
     closedSet.push(current);
@@ -67,28 +69,31 @@ function draw() {
     let neighbors = current.neighbors;
     for (let i = 0; i < neighbors.length; i++) {
       let n = neighbors[i];
-      if (!closedSet.includes(n)) {
+      if (!closedSet.includes(n) && !n.wall) {
         var tempG = current.g + 1;
-
+        var newPath = false;
         if (openSet.includes(n)) {
           if (tempG < n.g) {
             n.g = tempG;
+            newPath = true;
           }
         } else {
           n.g = tempG;
           openSet.push(n);
+          newPath = true;
         }
-
-        n.h = heuristic(n, end);
-        n.f = n.g + n.h;
-        n.previous = current;
+        if (newPath) {
+          n.h = heuristic(n, end);
+          n.f = n.g + n.h;
+          n.previous = current;
+        }
       }
-
     }
-
   } else {
     //No possible route found
+    noLoop();
     console.log('no route')
+    return;
   }
   background(0);
 
@@ -103,6 +108,7 @@ function draw() {
   for (let i = 0; i < closedSet.length; i++) {
     closedSet[i].show(color(255, 0, 0));
   }
+
   path = [];
   let temp = current;
   path.push(temp)
@@ -110,6 +116,8 @@ function draw() {
     path.push(temp.previous);
     temp = temp.previous;
   }
+
+
   for (let i = 0; i < path.length; i++) {
     path[i].show(color(0, 0, 255));
   }
