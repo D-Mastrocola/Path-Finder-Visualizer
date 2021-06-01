@@ -2,12 +2,10 @@
 //f(n) = g(n) + h(n)
 //g is the know cost
 //h is the estimated cost
-let cols = 50;
-let rows = 50;
-var grid = new Array(cols);
-
-var nodeSize;
-
+var cols;
+var rows;
+var nodeSize = 20;
+let grid;
 var openSet = [];
 var closedSet = [];
 var start;
@@ -15,9 +13,12 @@ var end;
 var path = [];
 
 function setup() {
-  createCanvas(500, 500);
+  cols = floor(innerWidth/nodeSize);
+  rows = floor(innerHeight/nodeSize);
+  createCanvas(cols * nodeSize, rows*nodeSize);
 
-  nodeSize = width / cols;
+  grid = new Array(cols)
+  
   //Creating a 2D array for the nodes
   for (let i = 0; i < cols; i++) {
     grid[i] = new Array(rows);
@@ -60,7 +61,6 @@ function draw() {
     if (current == end) {
       noLoop();
       console.log('done');
-      return;
     }
 
     closedSet.push(current);
@@ -117,9 +117,16 @@ function draw() {
     temp = temp.previous;
   }
 
-
   for (let i = 0; i < path.length; i++) {
-    path[i].show(color(0, 0, 255));
+    path[i].show(color(0,0,255));
   }
+  noFill();
+  stroke(255);
+  beginShape();
+  for (let i = 0; i < path.length; i++) {
+    vertex(path[i].x * nodeSize + nodeSize/2, path[i].y * nodeSize + nodeSize/2);
+  }
+  endShape();
+  
 
 }
