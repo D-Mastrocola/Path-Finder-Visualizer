@@ -1,19 +1,23 @@
-html, body, main {
-    margin: 0;
+html,
+body,
+main {
+  margin: 0;
+}
+#menu {
+  position: absolute;
+  bottom: 5em;
+  right: 5em;
 }
 #start {
-    position: absolute;
-    bottom: 5em;
-    right: 5em;
-    width: 120px;
-    height: 40px;
-    background-color: #cc5555;
-    color: #fff;
-    font-size: 1.2em;
-    border: none;
-    outline: none;
-    border-radius: 5px;
+  width: 120px;
+  height: 40px;
+  background-color: #cc5555;
+  color: #fff;
+  font-size: 1.2em;
+  border: none;
+  outline: none;
+  border-radius: 5px;
 }
 #start:hover {
-    cursor: pointer;
+  cursor: pointer;
 }

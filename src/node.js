@@ -1,9 +1,15 @@
 function Node(i, j) {
   this.x = i;
   this.y = j;
+
+  //A*
   this.f = 0;
   this.g = 0;
   this.h = 0;
+
+  //Dijiktras
+  this.srcDist = 999_999
+
   this.neighbors = [];
   this.previous = null;
   this.wall = false;
@@ -26,11 +32,11 @@ function Node(i, j) {
     if (x > 0) this.neighbors.push(grid[x - 1][y]);
     if (y < rows - 1) this.neighbors.push(grid[x][y + 1]);
     if (y > 0) this.neighbors.push(grid[x][y - 1]);
-
+/*
     //Diagonals
     if (x > 0 && y > 0) this.neighbors.push(grid[x - 1][y - 1]);
     if (x < cols - 1 && y > 0) this.neighbors.push(grid[x + 1][y - 1]);
     if (x > 0 && y < rows - 1) this.neighbors.push(grid[x - 1][y + 1]);
-    if (x < cols - 1 && y < rows - 1) this.neighbors.push(grid[x + 1][y + 1]);
+    if (x < cols - 1 && y < rows - 1) this.neighbors.push(grid[x + 1][y + 1]);*/
   }
 }

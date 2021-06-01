@@ -11,6 +11,9 @@ var closedSet = [];
 var start;
 var end;
 var path = [];
+var current;
+var algorithm = "dijktras";
+let eraser = false;
 
 var isRunning = false;
 
@@ -67,8 +70,11 @@ function mousePressed() {
     } else if (grid[x][y] == end) {
       end.selected = true;
       end.wall = false;
+    } else if (grid[x][y].wall) {
+      grid[x][y].wall = false;
+      eraser = true;
     } else {
-      grid[x][y].wall = true;
+      grid[x][y].wall;
     }
   }
 }
@@ -89,6 +95,8 @@ function mouseDragged() {
     } else if (end.selected) {
       end = grid[x][y];
       end.selected = true;
+    } else if (eraser) {
+      grid[x][y].wall = false;
     } else {
       grid[x][y].wall = true;
       console.log(start.selected);
@@ -99,61 +107,118 @@ function mouseDragged() {
 function mouseReleased() {
   start.selected = false;
   end.selected = false;
+  eraser = false;
 }
 
 function heuristic(a, b) {
   var d = dist(a.x, a.y, b.x, b.y);
   return d;
 }
+function dijkstras() {
+  if (openSet.length > 0) {
+    //Open set is not empty so continue to search
+
+    let lowestIndex = 0;
+    for (let i = 0; i < openSet.length; i++) {
+      if (openSet[i].f < openSet[lowestIndex].f) {
+        lowestIndex = i;
+      }
+    }
+    current = openSet[lowestIndex];
+    if (current == end) {
+      noLoop();
+      console.log("done");
+    }
+
+    closedSet.push(current);
+    openSet.splice(lowestIndex, 1);
+
+    let neighbors = current.neighbors;
+    for (let i = 0; i < neighbors.length; i++) {
+      let n = neighbors[i];
+      if (!closedSet.includes(n) && !n.wall) {
+        var tempG = current.g + 1;
+        var newPath = false;
+        if (openSet.includes(n)) {
+          if (tempG < n.g) {
+            n.g = tempG;
+            newPath = true;
+          }
+        } else {
+          n.g = tempG;
+          openSet.push(n);
+          newPath = true;
+        }
+        if (newPath) {
+          n.h = heuristic(n, end);
+          n.f = n.g + n.h;
+          n.previous = current;
+        }
+      }
+    }
+  } else {
+    //No possible route found
+    noLoop();
+    console.log("no route");
+    return;
+  }
+}
+function aStar() {
+  if (openSet.length > 0) {
+    //Open set is not empty so continue to search
+
+    let lowestIndex = 0;
+    for (let i = 0; i < openSet.length; i++) {
+      if (openSet[i].f < openSet[lowestIndex].f) {
+        lowestIndex = i;
+      }
+    }
+    current = openSet[lowestIndex];
+    if (current == end) {
+      noLoop();
+      console.log("done");
+    }
+
+    closedSet.push(current);
+    openSet.splice(lowestIndex, 1);
+
+    let neighbors = current.neighbors;
+    for (let i = 0; i < neighbors.length; i++) {
+      let n = neighbors[i];
+      if (!closedSet.includes(n) && !n.wall) {
+        var tempG = current.g + 1;
+        var newPath = false;
+        if (openSet.includes(n)) {
+          if (tempG < n.g) {
+            n.g = tempG;
+            newPath = true;
+          }
+        } else {
+          n.g = tempG;
+          openSet.push(n);
+          newPath = true;
+        }
+        if (newPath) {
+          n.h = heuristic(n, end);
+          n.f = n.g + n.h;
+          n.previous = current;
+        }
+      }
+    }
+  } else {
+    //No possible route found
+    noLoop();
+    console.log("no route");
+    return;
+  }
+}
 function draw() {
   background(0);
   if (isRunning) {
-    if (openSet.length > 0) {
-      //Open set is not empty so continue to search
-
-      let lowestIndex = 0;
-      for (let i = 0; i < openSet.length; i++) {
-        if (openSet[i].f < openSet[lowestIndex].f) {
-          lowestIndex = i;
-        }
-      }
-      var current = openSet[lowestIndex];
-      if (current == end) {
-        noLoop();
-        console.log("done");
-      }
-
-      closedSet.push(current);
-      openSet.splice(lowestIndex, 1);
-
-      let neighbors = current.neighbors;
-      for (let i = 0; i < neighbors.length; i++) {
-        let n = neighbors[i];
-        if (!closedSet.includes(n) && !n.wall) {
-          var tempG = current.g + 1;
-          var newPath = false;
-          if (openSet.includes(n)) {
-            if (tempG < n.g) {
-              n.g = tempG;
-              newPath = true;
-            }
-          } else {
-            n.g = tempG;
-            openSet.push(n);
-            newPath = true;
-          }
-          if (newPath) {
-            n.h = heuristic(n, end);
-            n.f = n.g + n.h;
-            n.previous = current;
-          }
-        }
-      }
-    } else {
-      //No possible route found
-      noLoop();
-      console.log("no route");
-      return;
+    if (algorithm === "a*") {
+      aStar();
+    } else if(algorithm === 'dijktras') {
+      dijkstras();
     }
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
