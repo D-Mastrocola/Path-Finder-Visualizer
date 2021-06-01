@@ -7,9 +7,10 @@ function Node(i, j) {
   this.neighbors = [];
   this.previous = null;
   this.wall = false;
+  this.selected = false;
 
   if (random(1) < 0.3) {
-    this.wall = true;
+    //this.wall = true;
   }
 
   this.show = function (color) {
