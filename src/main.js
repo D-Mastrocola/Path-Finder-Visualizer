@@ -4,7 +4,7 @@
 //h is the estimated cost
 var cols;
 var rows;
-var nodeSize = 40;
+var nodeSize = 30;
 let grid;
 var openSet = [];
 var closedSet = [];
@@ -12,7 +12,7 @@ var start;
 var end;
 var path = [];
 var current;
-var algorithm = "dijktras";
+var algorithm = "a*";
 let eraser = false;
 
 var isRunning = false;
@@ -65,10 +65,10 @@ function mousePressed() {
     let x = floor(mouseX / nodeSize);
     let y = floor(mouseY / nodeSize);
 
-    if (start.selected) {
+    if (start == grid[x][y]) {
       start = grid[x][y];
       start.selected = true;
-    } else if (end.selected) {
+    } else if (end == grid[x][y]) {
       end = grid[x][y];
       end.selected = true;
     } else if (eraser) {
@@ -102,7 +102,6 @@ function mouseDragged() {
       end = grid[x][y];
       end.selected = true;
     } else if(start == grid[x][y] || end == grid[x][y]) {
-      //Do nothing
     }else if (eraser) {
       grid[x][y].wall = false;
     } else {
