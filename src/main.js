@@ -55,7 +55,7 @@ function setup() {
   for (let i = round((rows / 20) * 8); i <= round((rows / 20) * 13); i++) {
     grid[round(cols / 2)][i].wall = true;
   }
-  menu = new Menu(width-220, height - 420);
+  menu = new Menu(width - 220, height - 420);
 }
 function mousePressed() {
   if (
@@ -67,8 +67,21 @@ function mousePressed() {
   ) {
     let x = floor(mouseX / nodeSize);
     let y = floor(mouseY / nodeSize);
-    if(mouseX > menu.pos.x && mouseX < menu.pos.x + menu.width && mouseY > menu.pos.y && mouseY < menu.pos.y + menu.height) {
-      startRunning();
+    if (
+      mouseX > menu.pos.x &&
+      mouseX < menu.pos.x + menu.width &&
+      mouseY > menu.pos.y &&
+      mouseY < menu.pos.y + menu.height
+    ) {
+      menu.selected = true;
+      if (
+        mouseX > menu.startButton.pos.x &&
+        mouseX < menu.startButton.pos.x + menu.startButton.width &&
+        mouseY > menu.startButton.pos.y &&
+        mouseY < menu.startButton.pos.y + menu.startButton.height
+      ) {
+        startRunning();
+      }
     } else if (start == grid[x][y]) {
       start = grid[x][y];
       start.selected = true;
@@ -79,15 +92,9 @@ function mousePressed() {
       grid[x][y].wall = false;
     } else {
       grid[x][y].wall = true;
-      console.log(start.selected);
     }
   }
-
-  if (grid[x][y].wall) {
-      grid[x][y].wall = false;
-      eraser = true;
-    } 
-  }
+}
 function mouseDragged() {
   if (
     !isRunning &&
@@ -98,27 +105,26 @@ function mouseDragged() {
   ) {
     let x = floor(mouseX / nodeSize);
     let y = floor(mouseY / nodeSize);
-
-    if (start.selected) {
+    if (menu.selected) {
+    } else if (start.selected) {
       start = grid[x][y];
       start.selected = true;
     } else if (end.selected) {
       end = grid[x][y];
       end.selected = true;
-    } else if(start == grid[x][y] || end == grid[x][y]) {
-    }else if (eraser) {
+    } else if (start == grid[x][y] || end == grid[x][y]) {
+    } else if (eraser) {
       grid[x][y].wall = false;
     } else {
       grid[x][y].wall = true;
-      console.log(start.selected);
     }
   }
-  console.log(start);
 }
 function mouseReleased() {
   start.selected = false;
   end.selected = false;
   eraser = false;
+  menu.selected = false;
 }
 
 function heuristic(a, b) {
@@ -228,7 +234,7 @@ function draw() {
   if (isRunning) {
     if (algorithm === "a*") {
       aStar();
-    } else if(algorithm === 'dijktras') {
+    } else if (algorithm === "dijktras") {
       dijkstras();
     }
     for (let i = 0; i < cols; i++) {
