@@ -17,6 +17,8 @@ let eraser = false;
 
 var isRunning = false;
 
+let menu;
+
 function startRunning() {
   isRunning = true;
   openSet.push(start);
@@ -53,6 +55,7 @@ function setup() {
   for (let i = round((rows / 20) * 8); i <= round((rows / 20) * 13); i++) {
     grid[round(cols / 2)][i].wall = true;
   }
+  menu = new Menu(width-220, height - 420);
 }
 function mousePressed() {
   if (
@@ -64,8 +67,9 @@ function mousePressed() {
   ) {
     let x = floor(mouseX / nodeSize);
     let y = floor(mouseY / nodeSize);
-
-    if (start == grid[x][y]) {
+    if(mouseX > menu.pos.x && mouseX < menu.pos.x + menu.width && mouseY > menu.pos.y && mouseY < menu.pos.y + menu.height) {
+      startRunning();
+    } else if (start == grid[x][y]) {
       start = grid[x][y];
       start.selected = true;
     } else if (end == grid[x][y]) {
@@ -271,4 +275,5 @@ function draw() {
     );
   }
   endShape();
+  menu.draw();
 }
