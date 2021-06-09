@@ -64,20 +64,26 @@ function mousePressed() {
   ) {
     let x = floor(mouseX / nodeSize);
     let y = floor(mouseY / nodeSize);
-    if (grid[x][y] == start) {
+
+    if (start.selected) {
+      start = grid[x][y];
       start.selected = true;
-      start.wall = false;
-    } else if (grid[x][y] == end) {
+    } else if (end.selected) {
+      end = grid[x][y];
       end.selected = true;
-      end.wall = false;
-    } else if (grid[x][y].wall) {
+    } else if (eraser) {
       grid[x][y].wall = false;
-      eraser = true;
     } else {
-      grid[x][y].wall;
+      grid[x][y].wall = true;
+      console.log(start.selected);
     }
   }
-}
+
+  if (grid[x][y].wall) {
+      grid[x][y].wall = false;
+      eraser = true;
+    } 
+  }
 function mouseDragged() {
   if (
     !isRunning &&
@@ -95,7 +101,9 @@ function mouseDragged() {
     } else if (end.selected) {
       end = grid[x][y];
       end.selected = true;
-    } else if (eraser) {
+    } else if(start == grid[x][y] || end == grid[x][y]) {
+      //Do nothing
+    }else if (eraser) {
       grid[x][y].wall = false;
     } else {
       grid[x][y].wall = true;
